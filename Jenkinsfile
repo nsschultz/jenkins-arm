@@ -13,14 +13,20 @@ pipeline
         stage('push')
         { 
             when { branch 'master' }
-            withCredentials([string(credentialsId: 'dockerhub-creds', usernameVariable: 'un', passwordVariable: 'pw')])
+            steps
             {
-                steps { script { sh """
-                    #!/bin/bash
-                    docker login -u ${un} -p ${pw}
-                    docker push nschultz/jenkins:${IMAGE_VERSION}
-                    docker logout
-                """ } } 
+                withCredentials([string(credentialsId: 'dockerhub-creds', usernameVariable: 'un', passwordVariable: 'pw')])
+                {
+                    script 
+                    { 
+                        sh """
+                        #!/bin/bash
+                        docker login -u ${un} -p ${pw}
+                        docker push nschultz/jenkins:${IMAGE_VERSION}
+                        docker logout
+                        """ 
+                    } 
+                } 
             }
         }
     }
