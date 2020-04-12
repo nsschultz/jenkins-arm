@@ -8,24 +8,21 @@ pipeline
     }
     stages 
     {
-        stage('build') 
-        { steps { script { sh("docker build -t nschultz/jenkins:${IMAGE_VERSION} .") } } }
+        stage('build') { steps { script { sh("docker build -t nschultz/jenkins:${IMAGE_VERSION} .") } } }
         stage('push')
         { 
             when { branch 'master' }
             steps
             {
-                withCredentials([string(credentialsId: 'dockerhub-creds', usernameVariable: 'un', passwordVariable: 'pw')])
+                DOCKER_HUB = credentials("dockerhub-creds")
+                script 
                 {
-                    script 
-                    { 
-                        sh """
+                    sh  """
                         #!/bin/bash
-                        docker login -u ${un} -p ${pw}
+                        docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PW}
                         docker push nschultz/jenkins:${IMAGE_VERSION}
                         docker logout
                         """ 
-                    } 
                 } 
             }
         }
