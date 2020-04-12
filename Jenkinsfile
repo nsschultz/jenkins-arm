@@ -19,7 +19,7 @@ pipeline
                 {
                     sh  """
                         #!/bin/bash
-                        docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PW}
+                        docker login -u ${DOCKER_HUB_USR} -p ${DOCKER_HUB_PSW}
                         docker push nschultz/jenkins:${IMAGE_VERSION}
                         docker logout
                         """ 
