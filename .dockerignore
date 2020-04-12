@@ -1,2 +1,8 @@
 home/
 secrets/
+.git/
+.gitignore
+Dockerfile
+Jenkinsfile
+LICENSE
+README.md
