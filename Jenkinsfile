@@ -5,6 +5,7 @@ pipeline
     {
         VERSION_NUMBER = '0.1.0'
         IMAGE_VERSION = "${GIT_BRANCH == "master" ? VERSION_NUMBER : VERSION_NUMBER+"-"+GIT_BRANCH}"
+        DOCKER_HUB = credentials("dockerhub-creds")
     }
     stages 
     {
@@ -14,7 +15,6 @@ pipeline
             when { branch 'master' }
             steps
             {
-                DOCKER_HUB = credentials("dockerhub-creds")
                 script 
                 {
                     sh  """
