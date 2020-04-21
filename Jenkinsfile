@@ -1,9 +1,9 @@
 pipeline 
 {
-    agent any
+    agent { label 'builder' }
     environment
     {
-        VERSION_NUMBER = '0.1.0'
+        VERSION_NUMBER = '0.2.0'
         IMAGE_VERSION = "${GIT_BRANCH == "master" ? VERSION_NUMBER : VERSION_NUMBER+"-"+GIT_BRANCH}"
         DOCKER_HUB = credentials("dockerhub-creds")
     }

@@ -14,3 +14,23 @@ credentials:
             password: "${dockerhub-password}"
             scope: GLOBAL
             username: "${dockerhub-user}"
+        - usernamePassword:
+            description: "Creds for SShing into Workers"
+            id: "ssh-creds"
+            password: "${ssh-password}"
+            scope: GLOBAL
+            username: "${ssh-user}"
+jenkins:
+  labelString: "manager"
+  nodes:
+    - permanent:
+        labelString: "builder"
+        launcher:
+          ssh:
+            credentialsId: "ssh-creds"
+            host: "${ssh-worker-ip-1}"
+            port: 22
+            sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+        name: "worker-01"
+        remoteFS: "/docker/devops/jenkins/agent/"
+        retentionStrategy: "always"
