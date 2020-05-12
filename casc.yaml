@@ -22,6 +22,7 @@ credentials:
             username: "${ssh-user}"
 jenkins:
   labelString: "manager"
+  mode: EXCLUSIVE
   nodes:
     - permanent:
         labelString: "builder"
@@ -32,5 +33,6 @@ jenkins:
             port: 22
             sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
         name: "worker-01"
+        numExecutors: 4
         remoteFS: "/docker/devops/jenkins/agent/"
         retentionStrategy: "always"
