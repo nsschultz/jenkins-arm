@@ -1,38 +1,79 @@
 credentials:
-    system:
-      domainCredentials:
-      - credentials:
-        - usernamePassword:
-            description: "GitHub Credentials"
-            id: "github-creds"
-            password: "${github-password}"
-            scope: GLOBAL
-            username: "${github-user}"
-        - usernamePassword:
-            description: "DockerHub Credentials"
-            id: "dockerhub-creds"
-            password: "${dockerhub-password}"
-            scope: GLOBAL
-            username: "${dockerhub-user}"
-        - usernamePassword:
-            description: "Creds for SShing into Workers"
-            id: "ssh-creds"
-            password: "${ssh-password}"
-            scope: GLOBAL
-            username: "${ssh-user}"
+  system:
+    domainCredentials:
+    - credentials:
+      - usernamePassword:
+          description: "GitHub Credentials"
+          id: "github-creds"
+          password: "${github_password}"
+          scope: GLOBAL
+          username: "${github_user}"
+      - usernamePassword:
+          description: "DockerHub Credentials"
+          id: "dockerhub-creds"
+          password: "${dockerhub_password}"
+          scope: GLOBAL
+          username: "${dockerhub_user}"
+      - usernamePassword:
+          description: "Creds for SShing into Workers"
+          id: "ssh-creds"
+          password: "${ssh_password}"
+          scope: GLOBAL
+          username: "${ssh_user}"
 jenkins:
-  labelString: "manager"
+  agentProtocols:
+    - JNLP4-connect
+    - Ping
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  disableRememberMe: false
+  labelString: "container"
+  markupFormatter: "plainText"
   mode: EXCLUSIVE
   nodes:
+    - permanent:
+        labelString: "manager"
+        launcher:
+          ssh:
+            credentialsId: "ssh-creds"
+            host: "${ssh_manager_ip_1}"
+            port: 22
+            sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+        name: "manager-01"
+        numExecutors: 4
+        remoteFS: "/mnt/raid1/shared/pi/devops/jenkins/agent/"
+        retentionStrategy: "always"
     - permanent:
         labelString: "builder"
         launcher:
           ssh:
             credentialsId: "ssh-creds"
-            host: "${ssh-worker-ip-1}"
+            host: "${ssh_worker_ip_1}"
             port: 22
             sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
         name: "worker-01"
         numExecutors: 4
-        remoteFS: "/docker/devops/jenkins/agent/"
+        remoteFS: "/mnt/raid1/shared/pi/devops/jenkins/agent/"
         retentionStrategy: "always"
+    - permanent:
+        labelString: "builder"
+        launcher:
+          ssh:
+            credentialsId: "ssh-creds"
+            host: "${ssh_worker_ip_2}"
+            port: 22
+            sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+        name: "worker-02"
+        numExecutors: 4
+        remoteFS: "/mnt/raid1/shared/pi/devops/jenkins/agent/"
+        retentionStrategy: "always"
+  numExecutors: 2
+  primaryView:
+    all:
+      name: "all"
+  quietPeriod: 5
+  scmCheckoutRetryCount: 0
+  views:
+  - all:
+      name: "all"

@@ -3,7 +3,7 @@ pipeline
     agent { label 'builder' }
     environment
     {
-        VERSION_NUMBER = '0.2.1'
+        VERSION_NUMBER = '0.3.4'
         IMAGE_VERSION = "${GIT_BRANCH == "master" ? VERSION_NUMBER : VERSION_NUMBER+"-"+GIT_BRANCH}"
         DOCKER_HUB = credentials("dockerhub-creds")
     }

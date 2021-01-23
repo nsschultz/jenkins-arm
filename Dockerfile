@@ -1,4 +1,4 @@
-FROM jenkins4eval/jenkins
+FROM jenkins4eval/jenkins:2.191
 USER root
 # Install Docker Client
 RUN apt-get update && \
